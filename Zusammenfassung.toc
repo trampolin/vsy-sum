@@ -1,0 +1,32 @@
+\contentsline {section}{\numberline {1}Interaktionssemantik}{2}
+\contentsline {paragraph}{\textbf {blockierend / synchron:}}{2}
+\contentsline {paragraph}{\textbf {nicht blockierend / asynchron:}}{2}
+\contentsline {paragraph}{iterativer Server}{2}
+\contentsline {paragraph}{paralleler Server}{2}
+\contentsline {subsection}{\numberline {1.1}Semantika}{2}
+\contentsline {paragraph}{\textbf {at-least-once Semantik:}}{2}
+\contentsline {paragraph}{\textbf {at-most-once Semantik:}}{2}
+\contentsline {paragraph}{exactly-once Semantik:}{2}
+\contentsline {section}{\numberline {2}Server - Klassifikation}{3}
+\contentsline {subsection}{\numberline {2.1}Servertypen}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {paragraph}{}{3}
+\contentsline {subsection}{\numberline {2.2}Server Zustand}{3}
+\contentsline {paragraph}{zustandsinvariant}{3}
+\contentsline {paragraph}{zustands\IeC {\"a}ndernd}{3}
+\contentsline {section}{\numberline {3}Caching}{4}
+\contentsline {subsection}{\numberline {3.1}Client-Caching}{4}
+\contentsline {paragraph}{write-through}{4}
+\contentsline {paragraph}{delayed write}{4}
+\contentsline {paragraph}{write on close}{4}
+\contentsline {paragraph}{Probleme:}{4}
+\contentsline {subsubsection}{\numberline {3.1.1}zentrale Kontrollinstanz}{4}
+\contentsline {subsection}{\numberline {3.2}Broker, Trader, Proxy, Balancer, Agent}{4}
+\contentsline {paragraph}{Proxy}{4}
+\contentsline {paragraph}{Broker}{4}
+\contentsline {paragraph}{Trader}{4}
+\contentsline {paragraph}{Balancer}{4}
+\contentsline {paragraph}{Agent}{4}
+\contentsline {section}{\numberline {4}Peer-to-Peer Netzwerke}{5}
+\contentsline {subsection}{\numberline {4.1}unstrukturiert: zentralisiert, pur, hybrid}{5}
+\contentsline {subsection}{\numberline {4.2}strukturiert: DHT-basiert}{5}
