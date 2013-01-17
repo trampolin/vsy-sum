@@ -1,0 +1,106 @@
+\documentclass[a4paper]{article}
+\usepackage[utf8x]{inputenc}
+\usepackage{color}
+\usepackage{geometry}
+\geometry{verbose,a4paper,tmargin=25mm,bmargin=25mm,lmargin=15mm,rmargin=20mm}
+\title{VSY}
+\date{}
+\begin{document}
+\maketitle
+\tableofcontents
+\pagebreak
+\section{Interaktionssemantik}
+	\paragraph{\textbf{blockierend / synchron:}}Der Client wartet nach Absenden der Anforderung auf die Antwort des Servers.
+	\paragraph{\textbf{nicht blockierend / asynchron:}}Der Client verschickt die Anforderung, arbeitet sofort weiter und nimmt irgendwann später die Antwort entgegen.
+	\paragraph{iterativer Server} bearbeitet zunächst die Anfrage, sendet die Rückantwort und wartet erst dann auf die nächste Anfrage.
+	\paragraph{paralleler Server}startet nach dem Eintreffen einer Anfrage einen neuen Prozess/Thread zur Bearbeitung der Anfrage. Der Thread sendet die Rückantwort, der Hauptprozess steht sofort zur Annahme weiterer Anfragen zur Verfügung.
+	\subsection{Semantika}
+		\paragraph{\textbf{at-least-once Semantik:}}
+			\begin{itemize}
+				\item Der Sendeprozess wartet, bis die Rückantwort innerhalb einer gewissen Zeit eintrifft. Ein Überschreiten der Zeitschranke führt zu einem erneuten Verschicken der Nachricht und Setzen der Zeitschranke.
+				\item Schlagen Versuche mehrmals fehl, ist im Moment kein Senden möglich. Vielleicht ist die Leitung gestört, der Adressat nicht empfangsbereit, ...
+				\item Erhält der Empfänger durch mehrfaches Senden dieselbe Nachricht mehrmals, kann durch erneute Bearbeitung sichergestellt werden, dass die Anforderung mindestens einmal bearbeitet wird.
+			\end{itemize}
+		\paragraph{\textbf{at-most-once Semantik:}}
+			\begin{itemize}
+				\item Der Empfänger verwaltet eine Anforderungsliste, die die bisher gesendeten Anfragen enthält.
+				\item Anfragen werden mit Hilfe der Liste überprüft:
+					\begin{itemize}
+						\item Steht die Anfrage bereits in der Liste, so ging die Rückantwort verloren und die Rückantwort wird nochmal gesendet.
+						\item Andernfalls wird die Anfrage in der Liste vermerkt, die Anfrage bearbeitet und die Rückantwort gesendet.
+					\end{itemize}
+				\item Wurde die Rückantwort bestätigt, wird die zugehörige Anfrage aus der Liste gelöscht.
+				\item Bei vielen Clients und Anfragen muss die Historie nach einiger Zeit gelöscht werden, um den Speicherbedarf zu beschränken.				
+			\end{itemize}
+		\paragraph{exactly-once Semantik:}Um Systemfehler wie einen Plattenausfall auszuschalten, wird die Anforderungsliste in einem stabilen Speicher gehalten. So wird aus der at-most-once-Semantik die exactly-once-Semantik.
+		\pagebreak
+\section{Server - Klassifikation}
+	\subsection{Servertypen}
+		\paragraph{} Unterscheidung nach Anzahl der Dienste pro Server:
+			\begin{itemize}
+				\item \textbf{shared Server}stellt mehrere Dienste bereit, für jeden Service/Dienst steht ein eigener Prozess zur Verfügung. Bei einer Anfrage wird zunächst getestet, ob der Prozess aktiv ist und ggf. wird ein neuer Prozess gestartet. Ein solcher Prozess kann zur Erledigung der Anforderung einen Thread starten.
+				\item \textbf{unshared Server}stellt nur einen Dienst bereit, verschiedene Dienste liegen auf unterschiedlichen Servern, nicht notwendigerweise auf verschiedenen Rechnern.
+			\end{itemize}
+		\paragraph{} Unterscheidung anhand der Aktivierung:
+			\begin{itemize}
+				\item \textbf{per request Server}startet jedesmal neu, wenn eine Anfrage eintrifft. Mehrere Prozesse für den gleichen Dienst können konkurrent aktiv sein.
+				\item \textbf{persistent Server} wird beim Starten (Boot-Vorgang) des Systems oder beim Start der Server-Applikation aktiv. Client-Anfragen werden direkt an den Server-Prozess weitergeleitet oder bei nicht gestartetem Server vom BS mit einer Fehlermeldung beantwortet.
+			\end{itemize}
+	\subsection{Server Zustand}
+		\paragraph{zustandsinvariant}Server liefern Informationen, die sich zwar ändern können, die aber unabhängig von Client-Anfragen sind. Beispiele: Web-, Name- und Time-Server. Die Reihenfolge der Anfragen spielt keine Rolle
+		\paragraph{zustandsändernd} Server wechseln zwischen 2 Client-Anfragen ihren Zustand, wodurch evtl. Anforderungen von Clients nicht mehr erfüllt werden können (z.B. File-Server: löschen einer Datei). Die Reihenfolge der Anfragen ist zur Erledigung der Aufgaben entscheidend.
+			\begin{itemize}
+				\item \textbf{zustandsspeichernd}(stateful) Server speichern Zustände in internen Zustandstabellen (Gedächtnis).
+				\begin{itemize}
+					\item Vorteile
+						\begin{itemize}
+							\item Clients m¨ ussen den Zustand nicht in jeder 	Anfrage mitteilen, die Netzlast wird also reduziert.
+							\item Der Server kann auf zuk¨ unftige Anfragen schließen und entsprechende Operationen im Voraus durchführen.
+							\item Informationen sind gegen Ausspähen schützbar.
+						\end{itemize}
+					\item Nachteil: Hoher Speicherbedarf beim Server.
+				\end{itemize}
+				\item \textbf{zustandslos} (stateless) Server m¨ ussen vom Client bei jeder Anfrage die komplette Zustandsinformation erhalten, um die Anforderung korrekt erfüllen zu können. stateless server -> statefull client
+				\begin{itemize}
+					\item Vorteile: Nach einem Absturz des Servers muss der alte Zustand nicht wiederhergestellt werden, siehe at-most-once-Semantik. Der Client schickt seine Anfrage einfach noch einmal.
+					\item Nachteil: Es müssen evtl. sensitive Daten übertragen werden.
+				\end{itemize}
+			\end{itemize}
+\pagebreak
+\section{Caching}
+	\subsection{Client-Caching}
+		\paragraph{write-through}Ändert ein Client einen Cache-Eintrag, so wird der neue Wert auch an den Server geschickt, damit der Server die Änderung an der Originaldatei nachvollziehen kann.
+	\paragraph{delayed write}Zur Reduktion des Netzverkehrs werden mehrere Änderungen gesammelt und erst nach Ablauf eines Zeitintervals (bspw. 30s bei SUN NFS) an den Server geschickt.
+	\paragraph{write on close}Weitere Reduktion, wenn Änderungen erst beim Schließen der Datei an Server geschickt werden.
+	\paragraph{Probleme:}
+		\begin{itemize}
+			\item Nicht fehlertolerant bei Client-Crash: Alle noch nicht geschriebenen Daten gehen verloren.
+			\item Bei delayed write und write on close bekommt ein dritter Client die Änderungen von Client 1 und 2 ggf. nicht mit.
+			\item ie Konsistenz zwischen Client- und Server-Daten ist nicht sichergestellt. Beispiel: Client 1 und 2 löschen aus derselben Datei jeden zweiten Datensatz. Ergebnis?
+		\end{itemize}
+		Lösung:
+		\subsubsection{zentrale Kontrollinstanz}
+			\begin{itemize}
+				\item Der Server tabelliert, welcher Client welche Datei zum Lesen oder Schreiben ge¨ offnet hat:
+				\begin{itemize}
+					\item Eine zum Lesen ge¨ offnete Datei kann anderen Clients zum Lesen bereitgestellt werden.
+					\item Der Zugriff auf eine zum Schreiben ge¨ offnete Datei wird anderen Clients untersagt. Die Anfrage wird entweder verweigert oder in eine Warteschlange gestellt.
+				\end{itemize}
+				\item Sobald ein Client eine Datei zum Schreiben öffnet, schickt der Server allen lesenden Clients eine Nachricht zum L¨ oschen der Cache-Eintr¨ age: Schreib-/Lesezugriffe gehen ab dann direkt zum Server, der Cache wird quasi ausgeschaltet. ⇒ Leser und Schreiber k¨ onnen parallel weiterarbeiten, aber die Netzlast steigt aufgrund des ausgeschalteten Caches.
+			\end{itemize}
+	\subsection{Broker, Trader, Proxy, Balancer, Agent}
+		\paragraph{Proxy}Stellvertreter für mehrere Server. Oft wird Clients der Zugriff auf externe Server untersagt, nur ¨ uber den Proxy kann mit der Außenwelt kommuniziert werden.
+		\paragraph{Broker} Vermittelt zwischen Client und Server: Welcher Server stellt den gesuchten Dienst zur Verf¨ ugung?
+			\begin{itemize}
+				\item \textbf{intermediate oder forwarding} Die Client-Anfrage wird vom Broker angenommen und an den betroffenen Server ¨ ubergeben. Der Broker nimmt die R¨ uckantwort des Servers an und leitet die Antwort an den Client weiter.
+				\item \textbf{seperate oder handle-driven} Der Broker gibt die ermittelten Server-Informationen an den Client zur¨ uck. Anschließend kommuniziert der Client direkt mit dem entsprechenden Server.
+				\item \textbf{hybrider} unterst¨ utzt beide genannten Versionen. Der Client gibt an, welches Modell er w¨ unscht.
+			\end{itemize}
+		\paragraph{Trader} Sucht den am besten geeigneten Server heraus: Welcher Zeit-Server hat die geforderte Genauigkeit?
+		\paragraph{Balancer}Spezieller Trader, der die Arbeitslast auf verschiedene Server verteilt.
+		\paragraph{Agent}Koordiniert mehrere Server-Anfragen f¨ ur einen Client: Durch eine Suche ¨ uber verschiedene Web-Seiten findet der Agent z.B. den g¨ unstigsten Anbieter eines gesuchten Produkts.
+\pagebreak
+\section{Peer-to-Peer Netzwerke}
+	\subsection{unstrukturiert: zentralisiert, pur, hybrid}
+	\subsection{strukturiert: DHT-basiert}
+\end{document}
