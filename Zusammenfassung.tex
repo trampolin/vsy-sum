@@ -54,13 +54,13 @@
 				\begin{itemize}
 					\item Vorteile
 						\begin{itemize}
-							\item Clients m¨ ussen den Zustand nicht in jeder 	Anfrage mitteilen, die Netzlast wird also reduziert.
-							\item Der Server kann auf zuk¨ unftige Anfragen schließen und entsprechende Operationen im Voraus durchführen.
+							\item Clients müssen den Zustand nicht in jeder 	Anfrage mitteilen, die Netzlast wird also reduziert.
+							\item Der Server kann auf zukünftige Anfragen schließen und entsprechende Operationen im Voraus durchführen.
 							\item Informationen sind gegen Ausspähen schützbar.
 						\end{itemize}
 					\item Nachteil: Hoher Speicherbedarf beim Server.
 				\end{itemize}
-				\item \textbf{zustandslos} (stateless) Server m¨ ussen vom Client bei jeder Anfrage die komplette Zustandsinformation erhalten, um die Anforderung korrekt erfüllen zu können. stateless server -> statefull client
+				\item \textbf{zustandslos} (stateless) Server müssen vom Client bei jeder Anfrage die komplette Zustandsinformation erhalten, um die Anforderung korrekt erfüllen zu können. stateless server -> statefull client
 				\begin{itemize}
 					\item Vorteile: Nach einem Absturz des Servers muss der alte Zustand nicht wiederhergestellt werden, siehe at-most-once-Semantik. Der Client schickt seine Anfrage einfach noch einmal.
 					\item Nachteil: Es müssen evtl. sensitive Daten übertragen werden.
@@ -81,24 +81,24 @@
 		Lösung:
 		\subsubsection{zentrale Kontrollinstanz}
 			\begin{itemize}
-				\item Der Server tabelliert, welcher Client welche Datei zum Lesen oder Schreiben ge¨ offnet hat:
+				\item Der Server tabelliert, welcher Client welche Datei zum Lesen oder Schreiben geöffnet hat:
 				\begin{itemize}
-					\item Eine zum Lesen ge¨ offnete Datei kann anderen Clients zum Lesen bereitgestellt werden.
-					\item Der Zugriff auf eine zum Schreiben ge¨ offnete Datei wird anderen Clients untersagt. Die Anfrage wird entweder verweigert oder in eine Warteschlange gestellt.
+					\item Eine zum Lesen geöffnete Datei kann anderen Clients zum Lesen bereitgestellt werden.
+					\item Der Zugriff auf eine zum Schreiben geöffnete Datei wird anderen Clients untersagt. Die Anfrage wird entweder verweigert oder in eine Warteschlange gestellt.
 				\end{itemize}
-				\item Sobald ein Client eine Datei zum Schreiben öffnet, schickt der Server allen lesenden Clients eine Nachricht zum L¨ oschen der Cache-Eintr¨ age: Schreib-/Lesezugriffe gehen ab dann direkt zum Server, der Cache wird quasi ausgeschaltet. ⇒ Leser und Schreiber k¨ onnen parallel weiterarbeiten, aber die Netzlast steigt aufgrund des ausgeschalteten Caches.
+				\item Sobald ein Client eine Datei zum Schreiben öffnet, schickt der Server allen lesenden Clients eine Nachricht zum Löschen der Cache-Einträge: Schreib-/Lesezugriffe gehen ab dann direkt zum Server, der Cache wird quasi ausgeschaltet. ⇒ Leser und Schreiber können parallel weiterarbeiten, aber die Netzlast steigt aufgrund des ausgeschalteten Caches.
 			\end{itemize}
 	\subsection{Broker, Trader, Proxy, Balancer, Agent}
-		\paragraph{Proxy}Stellvertreter für mehrere Server. Oft wird Clients der Zugriff auf externe Server untersagt, nur ¨ uber den Proxy kann mit der Außenwelt kommuniziert werden.
-		\paragraph{Broker} Vermittelt zwischen Client und Server: Welcher Server stellt den gesuchten Dienst zur Verf¨ ugung?
+		\paragraph{Proxy}Stellvertreter für mehrere Server. Oft wird Clients der Zugriff auf externe Server untersagt, nur über den Proxy kann mit der Außenwelt kommuniziert werden.
+		\paragraph{Broker} Vermittelt zwischen Client und Server: Welcher Server stellt den gesuchten Dienst zur Verfügung?
 			\begin{itemize}
-				\item \textbf{intermediate oder forwarding} Die Client-Anfrage wird vom Broker angenommen und an den betroffenen Server ¨ ubergeben. Der Broker nimmt die R¨ uckantwort des Servers an und leitet die Antwort an den Client weiter.
-				\item \textbf{seperate oder handle-driven} Der Broker gibt die ermittelten Server-Informationen an den Client zur¨ uck. Anschließend kommuniziert der Client direkt mit dem entsprechenden Server.
-				\item \textbf{hybrider} unterst¨ utzt beide genannten Versionen. Der Client gibt an, welches Modell er w¨ unscht.
+				\item \textbf{intermediate oder forwarding} Die Client-Anfrage wird vom Broker angenommen und an den betroffenen Server übergeben. Der Broker nimmt die Rückantwort des Servers an und leitet die Antwort an den Client weiter.
+				\item \textbf{seperate oder handle-driven} Der Broker gibt die ermittelten Server-Informationen an den Client zurück. Anschließend kommuniziert der Client direkt mit dem entsprechenden Server.
+				\item \textbf{hybrider} unterstützt beide genannten Versionen. Der Client gibt an, welches Modell er wünscht.
 			\end{itemize}
 		\paragraph{Trader} Sucht den am besten geeigneten Server heraus: Welcher Zeit-Server hat die geforderte Genauigkeit?
 		\paragraph{Balancer}Spezieller Trader, der die Arbeitslast auf verschiedene Server verteilt.
-		\paragraph{Agent}Koordiniert mehrere Server-Anfragen f¨ ur einen Client: Durch eine Suche ¨ uber verschiedene Web-Seiten findet der Agent z.B. den g¨ unstigsten Anbieter eines gesuchten Produkts.
+		\paragraph{Agent}Koordiniert mehrere Server-Anfragen für einen Client: Durch eine Suche über verschiedene Web-Seiten findet der Agent z.B. den günstigsten Anbieter eines gesuchten Produkts.
 \pagebreak
 \section{Peer-to-Peer Netzwerke}
 	\subsection{unstrukturiert: zentralisiert, pur, hybrid}
